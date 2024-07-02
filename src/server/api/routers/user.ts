@@ -3,6 +3,18 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
+createUser: publicProcedure.input(z.object({ name: z.string(), email: z.string(), isLoading: z.boolean() })).mutation(async ({ ctx, input }) => {
+      const user = await ctx.db.user.create({
+        data: {
+          name: input.name,
+          email: input.email,
+        },
+      });
+  
+      return user;
+    }
+  ),
+
 login: publicProcedure
   .input(z.object({ username: z.string(), password: z.string() }))
   .mutation(async ({ ctx, input }) => {
@@ -20,6 +32,7 @@ login: publicProcedure
     const token = generateToken(user.id);
     return { token };
   }),
+
 
 findUser: publicProcedure
   .input(z.object({ userId: z.number() }))

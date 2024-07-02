@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { api as trpc } from "~/trpc/react";
 
 type User = {
   id: string;
@@ -9,13 +10,13 @@ type User = {
 interface UserContextType {
   user: User | null;
   token: string | null;
-  isLoaded: boolean;
+  isLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   token: null,
-  isLoaded: true,
+  isLoading: true,
 });
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -23,24 +24,27 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userToken, setToken] = useState<string | null>(null);
-  const [isLoaded, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //conntecting to trpc server
-  const { data, isLoaded: fetching } = trcp.useQuery(["me"]);
-  const { data: fetchedToken, isLoaded: isTokenLoaded } = trpc.useQuery([
-    "token",
-  ]);
+  const { data, isPending } = trpc.user.createUser.useMutation();
 
   useEffect(() => {
-    if (!fetching) {
-      setUser(data?.user ?? null);
-      setToken(data?.token ?? null);
-      setIsLoading(false);
+    if (!isPending) {
+      if (data) {
+        const { id, email, name } = data;
+        setUser({
+          id: id.toString(),
+          name: name ?? "",
+          email,
+        });
+        setIsLoading(false);
+      }
     }
-  }, [data, fetching]);
+  }, [data, isPending]);
 
   return (
-    <UserContext.Provider value={{ user, token: userToken, isLoaded }}>
+    <UserContext.Provider value={{ user, token: userToken, isLoading }}>
       {children}
     </UserContext.Provider>
   );
