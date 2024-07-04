@@ -1,3 +1,4 @@
+"use client";
 import React, { createContext, useEffect, useState } from "react";
 import { api as trpc } from "~/trpc/react";
 
@@ -13,7 +14,7 @@ interface UserContextType {
   isLoading: boolean;
 }
 
-const UserContext = createContext<UserContextType>({
+export const UserContext = createContext<UserContextType>({
   user: null,
   token: null,
   isLoading: true,
