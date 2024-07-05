@@ -1,35 +1,35 @@
-'use client'
-import React, { useState } from 'react'
-import { api } from '~/trpc/react'
+"use client";
+import React, { useState } from "react";
+import { api } from "~/trpc/react";
 
 type CreateUser = {
-  name?: string
-  email?: string
-  isLoading?: boolean
-  onCreateAccount?: () => void
-}
+  name?: string;
+  email?: string;
+  isLoading?: boolean;
+  onCreateAccount?: () => void;
+};
 
 const CreateAccount: React.FC<CreateUser> = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const createUser = api.user.createUser.useMutation({})
+  const createUser = api.user.createUser.useMutation({});
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     createUser.mutate({
       name: username,
       email: password,
       isLoading: true,
-    })
-  }
+    });
+  };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
-  }
+    setUsername(e.target.value);
+  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
+    setPassword(e.target.value);
+  };
 
   return (
     <div>
@@ -56,7 +56,7 @@ const CreateAccount: React.FC<CreateUser> = () => {
         <button type="submit">Create Account</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default CreateAccount
+export default CreateAccount;

@@ -47,7 +47,6 @@ export default function Home() {
 
 async function CrudShowcase() {
   const latestPost = await api.post.getLatest();
-
   return (
     <div className="w-full max-w-xs">
       {latestPost ? (
