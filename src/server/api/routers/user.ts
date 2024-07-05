@@ -37,20 +37,14 @@ login: publicProcedure
 
 
 findUser: publicProcedure
-  .input(z.object({ userId: z.number() }))
-  .query(async ({ ctx, input }) => {
-    const user = await ctx.db.user.findUnique({
+  .query(async ({ ctx }) => {
+    return ctx.db.user.findFirst({
       where: {
-        id: input.userId,
+        id: 1,
       },
     });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    return user;
-  }),
+  } 
+  ),
 
 })
 
