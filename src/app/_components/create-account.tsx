@@ -1,17 +1,16 @@
-"use client";
 import React, { useState } from "react";
+import { CreateUserProps } from "~/app-props/types";
 import { api } from "~/trpc/react";
 
-type CreateUser = {
-  name?: string;
-  email?: string;
-  isLoading?: boolean;
-  onCreateAccount?: () => void;
-};
+// # place the properties in the right-side of the React.FC..
+// const LogInComponent: React.FC<AppProps> = ({}) => ...
 
-const CreateAccount: React.FC<CreateUser> = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+// # when using the properties, destructure them in the function signature..
+// const CreateAccountComponent: React.FC<CreateUser> = ({ name, email }) =>..
+
+const CreateAccountComponent: React.FC<CreateUserProps> = ({ name, email }) => {
+  const [username, setUsername] = useState(name || "");
+  const [password, setPassword] = useState(email || "");
 
   const createUser = api.user.createUser.useMutation({});
   const handleSubmit = (e: React.FormEvent) => {
@@ -59,4 +58,4 @@ const CreateAccount: React.FC<CreateUser> = () => {
   );
 };
 
-export default CreateAccount;
+export default CreateAccountComponent;
