@@ -4,7 +4,7 @@ interface AppProps {
   name: string;
 }
 
-const App: React.FC<AppProps> = ({ name }) => {
+const logIn: React.FC<AppProps> = ({ name }) => {
   return (
     <>
       <div>
@@ -18,4 +18,4 @@ const App: React.FC<AppProps> = ({ name }) => {
   );
 };
 
-export default App;
+export default logIn;
