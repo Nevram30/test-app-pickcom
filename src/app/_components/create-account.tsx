@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { CreateUserProps } from "~/app-props/types";
 import { api } from "~/trpc/react";
