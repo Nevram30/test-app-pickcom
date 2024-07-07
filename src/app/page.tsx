@@ -1,14 +1,17 @@
 import Link from "next/link";
 
-import { CreatePost } from "~/app/_components/create-post";
+import { CreatePost } from "~/app/_components-main/create-post";
 import { api } from "~/trpc/server";
-import CreateAccount from "./_components/create-account";
+import CreateAccount from "./_components-main/create-account";
+import { userViewData } from "~/prop/types";
 
-export default function Home() {
+const Home: React.FC = async () => {
+  const users = await api.user.findUser();
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white from-[#2e026d] to-[#15162c] text-white dark:bg-gradient-to-b">
       <div className="flex flex-col items-center gap-4">
-        <div>{getUserAll()}</div>
+        <UserView data={users} />
         <div className="flex flex-col items-center gap-2">
           <CreateAccount />
         </div>
@@ -17,9 +20,9 @@ export default function Home() {
       </div>
     </main>
   );
-}
+};
 
-async function CrudShowcase() {
+const CrudShowcase: React.FC = async () => {
   const latestPost = await api.post.getLatest();
   return (
     <div className="w-full max-w-xs">
@@ -32,17 +35,15 @@ async function CrudShowcase() {
       <CreatePost />
     </div>
   );
-}
+};
 
-async function getUserAll() {
-  const users = await api.user.findUser();
+const UserView: React.FC<userViewData> = async ({ data }) => {
   return (
-    <div className="w-full max-w-xs">
-      {users ? (
-        <p className="truncate">Your most recent user: {users.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
+    <div>
+      <h1>{data?.name}</h1>
+      <h2>{data?.email}</h2>
     </div>
   );
-}
+};
+
+export default Home;

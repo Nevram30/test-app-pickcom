@@ -9,7 +9,7 @@ import {
   Image,
 } from "@nextui-org/react";
 
-const CardAgencyComponent: React.FC = ({}) => {
+const CardAgency: React.FC = ({}) => {
   return (
     <>
       <div>
@@ -47,4 +47,4 @@ const CardAgencyComponent: React.FC = ({}) => {
   );
 };
 
-export default CardAgencyComponent;
+export default CardAgency;

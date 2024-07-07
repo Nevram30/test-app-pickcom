@@ -1,10 +1,10 @@
 import React from "react";
-import { AppProps } from "~/app-props/types";
+import { AppProps } from "~/prop/types";
 
 // # place the properties in the right-side of the React.FC..
 // const LogInComponent: React.FC<AppProps> = ({}) => ...
 
-const LogInComponent: React.FC<AppProps> = ({}) => {
+const LogIn: React.FC<AppProps> = ({}) => {
   return (
     <>
       <div>
@@ -18,4 +18,4 @@ const LogInComponent: React.FC<AppProps> = ({}) => {
   );
 };
 
-export default LogInComponent;
+export default LogIn;
