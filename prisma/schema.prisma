@@ -47,14 +47,17 @@ enum ServiceTypes {
 }
 
 model User {
-    id            String          @id @default(cuid())
-    email         String          @unique
-    role          Role
-    clientPosts   ClientPost[]
-    agencyPosts   AgencyPost[]
-    Address       Address?
-    pickedProject PickedProject[]
-    PickedAgency  PickedAgency[]
+    id              String          @id @default(cuid())
+    name            String          @db.VarChar(255)
+    email           String          @unique
+    password        String          @db.VarChar(255)
+    isEmailVerified Boolean         @default(false)
+    role            Role
+    clientPosts     ClientPost[]
+    agencyPosts     AgencyPost[]
+    Address         Address?
+    pickedProject   PickedProject[]
+    PickedAgency    PickedAgency[]
 
     @@index([role])
 }
