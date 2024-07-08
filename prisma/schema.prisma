@@ -1,43 +1,149 @@
 datasource db {
-    provider     = "postgresql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 generator client {
     provider = "prisma-client-js"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    authorId  Int // Add the 'authorId' field
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    author    User     @relation(fields: [authorId], references: [id])
+enum Role {
+    ADMIN
+    CLIENT
+    AGENCY
+}
 
-    @@index([authorId])
+enum ProjectType {
+    WEB
+    MOBILE
+    DESKTOP
+}
+
+enum ProjectStage {
+    PLANNING
+    DESIGN
+    DEVELOPMENT
+    TESTING
+    DEPLOYMENT
+}
+
+enum IndustryType {
+    IT
+    FINANCE
+    HEALTHCARE
+    EDUCATION
+    RETAIL
+    MANUFACTURING
+    OTHER
+}
+
+enum ServiceTypes {
+    WEB_DESIGN
+    WEB_DEVELOPMENT
+    MOBILE_DESIGN
+    MOBILE_DEVELOPMENT
+    DESKTOP_DESIGN
+    DESKTOP_DEVELOPMENT
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
-    email     String   @unique
-    name      String?
-    profile   Profile?
-    posts     Post[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id            String          @id @default(cuid())
+    email         String          @unique
+    role          Role
+    clientPosts   ClientPost[]
+    agencyPosts   AgencyPost[]
+    Address       Address?
+    pickedProject PickedProject[]
+    PickedAgency  PickedAgency[]
+
+    @@index([role])
+}
+
+model projectType {
+    id            String       @id @default(cuid())
+    name          ProjectType
+    clientPosts   ClientPost[]
+    projectTypeId String
 
     @@index([name])
 }
 
-model Profile {
-    id        Int      @id @default(autoincrement())
-    userId    Int      @unique // Add the 'userId' field
-    bio       String?
-    user      User     @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model projectStage {
+    id             String       @id @default(cuid())
+    name           ProjectStage
+    clientPosts    ClientPost[]
+    projectStageId String
 
-    @@index([bio])
+    @@index([name])
+}
+
+model PickedProject {
+    id           String     @id @default(cuid())
+    clientPost   ClientPost @relation(fields: [clientPostId], references: [id])
+    clientPostId String
+    agency       User       @relation(fields: [agencyId], references: [id])
+    agencyId     String
+
+    @@unique([clientPostId, agencyId])
+}
+
+model PickedAgency {
+    id           String     @id @default(cuid())
+    agencyPost   AgencyPost @relation(fields: [agencyPostId], references: [id])
+    agencyPostId String
+    client       User       @relation(fields: [clientId], references: [id])
+    clientId     String
+
+    @@unique([agencyPostId, clientId])
+}
+
+model ClientPost {
+    id                  String          @id @default(cuid())
+    project_title       String          @db.VarChar(255)
+    project_description String          @db.VarChar(255)
+    project_type        projectType     @relation(fields: [projectTypeId], references: [id])
+    project_stage       projectStage    @relation(fields: [projectStageId], references: [id])
+    user                User            @relation(fields: [user_id], references: [id])
+    user_id             String
+    projectTypeId       String
+    projectStageId      String
+    pickedBy            PickedProject[]
+
+    @@index([user_id])
+    @@index([projectTypeId])
+    @@index([projectStageId])
+}
+
+model AgencyPost {
+    id                 String         @id @default(cuid())
+    agency_name        String?        @db.VarChar(255)
+    agency_description String         @db.VarChar(255)
+    agency_address     Address[]
+    phone_number       String
+    website_url        String
+    industry_type      IndustryType[]
+    size               Int
+    foundedYear        Int
+    serviceTypesId     ServiceTypes[]
+    user               User           @relation(fields: [user_id], references: [id])
+    user_id            String
+    pickedBy           PickedAgency[]
+
+    @@index([user_id])
+}
+
+model Address {
+    id           String      @id @default(cuid())
+    street       String
+    city         String
+    state        String
+    postalCode   String
+    country      String
+    user         User        @relation(fields: [user_id], references: [id])
+    user_id      String      @unique
+    AgencyPost   AgencyPost? @relation(fields: [agencyPostId], references: [id])
+    agencyPostId String?
+
+    @@index([user_id])
+    @@index([agencyPostId])
 }

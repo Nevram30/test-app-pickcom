@@ -9,22 +9,22 @@ export function CreatePost() {
   const router = useRouter();
   const [name, setName] = useState("");
 
-  const createPost = api.post.create.useMutation({
-    onSuccess: () => {
-      router.refresh();
-      setName("");
-    },
-  });
+  // const createPost = api.post.create.useMutation({
+  //   onSuccess: () => {
+  //     router.refresh();
+  //     setName("");
+  //   },
+  // });
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        createPost.mutate({
-          name,
-          author: "1",
-        });
-      }}
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   createPost.mutate({
+      //     name,
+      //     author: "1",
+      //   });
+      // }}
       className="flex flex-col gap-2"
     >
       <input
@@ -37,9 +37,9 @@ export function CreatePost() {
       <button
         type="submit"
         className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-        disabled={createPost.isPending}
+        // disabled={createPost.isPending}
       >
-        {createPost.isPending ? "Submitting..." : "Submit"}
+        {/* {createPost.isPending ? "Submitting..." : "Submit"} */}
       </button>
     </form>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { CreateUserProps, userViewData } from "~/prop/types";
+import { CreateUserProps } from "~/prop/types";
 import { api } from "~/trpc/react";
 
 // # place the properties in the right-side of the React.FC..
@@ -9,18 +9,18 @@ import { api } from "~/trpc/react";
 // # when using the properties, destructure them in the function signature..
 // const CreateAccountComponent: React.FC<CreateUser> = ({ name, email }) =>..
 
-const CreateAccount: React.FC<userViewData> = async ({ data }) => {
-  const [username, setUsername] = useState(data?.name || "");
-  const [password, setPassword] = useState(data?.email || "");
+const CreateAccount: React.FC<CreateUserProps> = ({ name, email }) => {
+  const [username, setUsername] = useState(name || "");
+  const [password, setPassword] = useState(email || "");
+  const createUserMutation = api.user.createUser.useMutation();
 
-  const createUser = api.user.createUser.useMutation({});
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createUser.mutate({
-      name: username,
-      email: password,
-      isLoading: true,
-    });
+    // await createUserMutation.mutateAsync({
+    //   name: username,
+    //   email: password,
+    //   isLoading: false,
+    // });
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
